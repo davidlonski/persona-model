@@ -10,7 +10,7 @@ Coding agents include this in every message to Fredrick for context.
 | IDE | Issue | Status | Notes |
 |---|---|---|---|
 | **Cursor** | #7 Organizer Agent integration | 🔵 assigned | lib/agents/organizer/, app/api/organize/ |
-| **Antigravity** | #8 Reminder delivery + scheduler | 🔵 assigned | lib/scheduler/, app/api/deliver/ |
+| **Antigravity** | #10 Dashboard UI | 🔵 assigned | app/dashboard/, components/ |
 
 ## Completed
 - #1 Initialize Next.js 15 (Cursor) — committed
@@ -19,10 +19,11 @@ Coding agents include this in every message to Fredrick for context.
 - #4 Gmail integration (Antigravity) — committed
 - #5 Google Calendar integration (Antigravity) — committed
 - #6 Filtering Agent (Antigravity) — committed
+- #8 Reminder delivery + scheduler (Antigravity) — committed
+- #9 Snooze + feedback loop (Antigravity) — committed
 
 ## Queue (next up)
-- **#9** Snooze + feedback loop
-- **#10** Dashboard UI
+- Waiting for #7 (Cursor) before integration testing
 
 ## Rules
 - One issue per IDE at a time
