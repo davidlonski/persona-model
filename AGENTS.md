@@ -34,16 +34,13 @@ This project is orchestrated by **Fredrick**, an OpenClaw agent. You have MCP to
 
 ### How to message Fredrick:
 
-Run this `curl` in your terminal to send Fredrick a message:
+Use the helper script — it sends your message and returns Fredrick's response:
 
 ```bash
-curl -X POST http://127.0.0.1:18789/hooks/agent \
-  -H "Authorization: Bearer pmhook_f2d8f5822dbfc0ca17c316024ac6ccd2" \
-  -H "Content-Type: application/json" \
-  -d '{"message": "[ISSUE #N] status — your message here", "agentId": "fredrick", "sessionKey": "ide:cursor"}'
+./scripts/ask-fredrick.sh "[ISSUE #N] status — your message here"
 ```
 
-**For Antigravity**, change `sessionKey` to `"ide:antigravity"`.
+This is **synchronous** — it waits for Fredrick's reply and prints it. Read the response before continuing.
 
 Message statuses: `starting`, `question`, `blocked`, `done`, `error`
 

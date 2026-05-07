@@ -73,21 +73,18 @@ You have an MCP connection to OpenClaw (Fredrick, the orchestrator agent). **Use
 - **On errors:** If something breaks that's outside your issue scope, report it
 
 ### How to communicate:
-Run this curl in the terminal to message Fredrick:
+Use the helper script to message Fredrick and get a response:
 
 ```bash
-curl -X POST http://127.0.0.1:18789/hooks/agent \
-  -H "Authorization: Bearer pmhook_f2d8f5822dbfc0ca17c316024ac6ccd2" \
-  -H "Content-Type: application/json" \
-  -d '{"message": "[ISSUE #N] status -- your message", "agentId": "fredrick", "sessionKey": "ide:cursor"}'
+./scripts/ask-fredrick.sh "[ISSUE #N] status -- your message"
 ```
+
+This is **synchronous** — it sends your message and prints Fredrick's reply. **Read the response before continuing.**
 
 Statuses: `starting`, `question`, `blocked`, `done`, `error`
 
 Example:
 ```bash
-curl -X POST http://127.0.0.1:18789/hooks/agent \
-  -H "Authorization: Bearer pmhook_f2d8f5822dbfc0ca17c316024ac6ccd2" \
-  -H "Content-Type: application/json" \
-  -d '{"message": "[ISSUE #1] done -- Next.js 15 initialized with TypeScript, Tailwind v4, shadcn/ui. Dev server runs on :3000.", "agentId": "fredrick", "sessionKey": "ide:cursor"}'
+./scripts/ask-fredrick.sh "[ISSUE #1] done -- Next.js 15 initialized with TypeScript, Tailwind v4, shadcn/ui. Dev server runs on :3000."
+# Fredrick replies with next steps or approval
 ```
