@@ -9,8 +9,8 @@ Coding agents include this in every message to Fredrick for context.
 
 | IDE | Issue | Status | Notes |
 |---|---|---|---|
-| **Cursor** | #7 Organizer Agent integration | 🔵 assigned | lib/agents/organizer/, app/api/organize/ |
-| **Antigravity** | #8 Reminder delivery + scheduler | 🔵 assigned | lib/scheduler/, app/api/deliver/ |
+| **Cursor** | — | ✅ idle | MVP complete |
+| **Antigravity** | — | ✅ idle | MVP complete |
 
 ## Completed
 - #1 Initialize Next.js 15 (Cursor) — committed
@@ -19,10 +19,17 @@ Coding agents include this in every message to Fredrick for context.
 - #4 Gmail integration (Antigravity) — committed
 - #5 Google Calendar integration (Antigravity) — committed
 - #6 Filtering Agent (Antigravity) — committed
+- #7 Organizer Agent (Cursor) — committed
+- #8 Reminder delivery + scheduler (Antigravity) — committed
+- #9 Snooze + feedback loop (Antigravity) — committed
+- #10 Dashboard UI (Antigravity) — committed
+- #11 Integration testing (Cursor) — committed
+- #12 Deploy to Vercel + cron (Antigravity) — committed
 
 ## Queue (next up)
-- **#9** Snooze + feedback loop
-- **#10** Dashboard UI
+- Dogfooding + real data testing
+- Wire up real Gmail/Calendar OAuth credentials
+- Register Telegram webhook on Vercel URL
 
 ## Rules
 - One issue per IDE at a time
