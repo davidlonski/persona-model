@@ -1,0 +1,9 @@
+{
+  "servers": {
+    "openclaw": {
+      "command": "openclaw",
+      "args": ["mcp", "serve"],
+      "transport": "stdio"
+    }
+  }
+}

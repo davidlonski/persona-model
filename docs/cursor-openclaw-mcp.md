@@ -1,9 +1,9 @@
-# Cursor ↔ OpenClaw MCP Integration
+# IDE ↔ OpenClaw MCP Integration (Cursor + Antigravity)
 
 ## Overview
 
-Cursor IDE connects to the OpenClaw gateway via the MCP (Model Context Protocol) bridge.
-This allows Cursor's coding agent to communicate with Fredrick (the orchestrator agent)
+Both Cursor and Google Antigravity connect to the OpenClaw gateway via the MCP (Model Context Protocol) bridge.
+This allows the coding agents to communicate with Fredrick (the orchestrator agent)
 for task coordination, code review, and clarification.
 
 ## How It Works
@@ -25,9 +25,9 @@ Fredrick Agent Session
 
 ## Setup
 
-### 1. Cursor MCP Config
+### 1a. Cursor MCP Config
 
-Create/edit `.cursor/mcp.json` in the project root:
+Already configured in `.cursor/mcp.json`:
 
 ```json
 {
@@ -40,22 +40,39 @@ Create/edit `.cursor/mcp.json` in the project root:
 }
 ```
 
-For remote gateway (if not on the same machine):
+Cursor auto-detects this file when opening the project.
 
+### 1b. Antigravity MCP Config
+
+Option A — Project-level config in `.antigravity/mcp.json` (already in repo):
 ```json
 {
-  "mcpServers": {
+  "servers": {
     "openclaw": {
       "command": "openclaw",
-      "args": [
-        "mcp", "serve",
-        "--url", "wss://gateway-host:18789",
-        "--token-file", "/path/to/gateway.token"
-      ]
+      "args": ["mcp", "serve"],
+      "transport": "stdio"
     }
   }
 }
 ```
+
+Option B — Global config via Antigravity UI:
+1. Open Agent panel → three dots (...) → MCP Servers → Manage MCP Servers
+2. Click "View raw config"
+3. Add the openclaw server entry above
+4. Save and refresh
+
+Option C — Via MCP Store search (if OpenClaw is listed), or manual add.
+
+**Important:** If Antigravity can't find `openclaw` command, use the full path:
+```json
+{
+  "command": "/usr/local/bin/openclaw",
+  "args": ["mcp", "serve"]
+}
+```
+This avoids macOS GUI PATH issues.
 
 ### 2. Verify Connection
 
