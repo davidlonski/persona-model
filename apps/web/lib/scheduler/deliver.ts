@@ -1,35 +1,37 @@
-import { db } from "../db";
-import { reminders } from "../db/schema";
-import { eq, lte, and } from "drizzle-orm";
+import { and, eq, isNotNull, lte } from "drizzle-orm";
+import { getDb } from "@/lib/db";
+import { reminders } from "@/lib/db/schema";
+import { createTelegramClientFromEnv } from "@/lib/telegram/client";
 
-// Assume this exists from Issue #3
-// @ts-ignore
-import { sendReminder } from "../telegram/client";
-
-export async function deliverDueReminders() {
+/**
+ * Sends reminders whose `remind_at` is due via Telegram, then marks them completed.
+ */
+export async function deliverDueReminders(): Promise<number> {
+  const db = getDb();
   const now = new Date();
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+  if (!chatId) {
+    throw new Error("TELEGRAM_CHAT_ID is not set");
+  }
 
-  // The Drizzle query using the schema from Issue #2
-  // @ts-ignore
-  const dueReminders = await db.query.reminders.findMany({
+  const due = await db.query.reminders.findMany({
     where: and(
-      eq((reminders as any).status, "pending"),
-      lte((reminders as any).dueAt, now)
-    )
+      eq(reminders.status, "active"),
+      isNotNull(reminders.remindAt),
+      lte(reminders.remindAt, now),
+    ),
   });
 
+  const client = createTelegramClientFromEnv();
+
   let deliveredCount = 0;
-
-  for (const reminder of dueReminders) {
+  for (const reminder of due) {
     try {
-      const message = `Reminder: ${reminder.title}\nDue: ${reminder.dueAt}\n${reminder.body || ""}`;
-      
-      await sendReminder(message);
-
-      await db.update(reminders)
-        .set({ status: "sent" as any })
+      await client.sendReminder(chatId, reminder);
+      await db
+        .update(reminders)
+        .set({ status: "completed", updatedAt: new Date() })
         .where(eq(reminders.id, reminder.id));
-      
       deliveredCount++;
     } catch (error) {
       console.error(`Failed to deliver reminder ${reminder.id}:`, error);
