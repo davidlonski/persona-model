@@ -1,4 +1,4 @@
-# PersonaModel — Cursor Rules
+# PersonaModel - Cursor Rules
 
 ## Project Overview
 PersonaModel is a cross-device AI reminder agent built with Next.js and OpenClaw.
@@ -13,22 +13,22 @@ items from data sources and deliver timely reminders.
 - Telegram Bot API for mobile delivery
 
 ## Code Style
-- TypeScript strict mode — no `any` types
+- TypeScript strict mode - no `any` types
 - Use `async/await` over `.then()` chains
 - Prefer named exports over default exports
-- Use Drizzle ORM for all database queries — no raw SQL in route handlers
+- Use Drizzle ORM for all database queries - no raw SQL in route handlers
 - Server Components by default; use `"use client"` only when needed
 - API routes in `app/api/` using Next.js Route Handlers
 
 ## File Structure Conventions
-- `app/` — pages and layouts (App Router)
-- `app/api/` — API route handlers
-- `components/` — reusable React components
-- `components/ui/` — shadcn/ui base components
-- `lib/` — shared utilities, database client, types
-- `lib/db/` — Drizzle schema, migrations, queries
-- `lib/agents/` — agent prompt templates and OpenClaw integration
-- `lib/telegram/` — Telegram bot client
+- `app/` - pages and layouts (App Router)
+- `app/api/` - API route handlers
+- `components/` - reusable React components
+- `components/ui/` - shadcn/ui base components
+- `lib/` - shared utilities, database client, types
+- `lib/db/` - Drizzle schema, migrations, queries
+- `lib/agents/` - agent prompt templates and OpenClaw integration
+- `lib/telegram/` - Telegram bot client
 
 ## Database
 - Use Drizzle ORM with PostgreSQL
@@ -41,14 +41,14 @@ items from data sources and deliver timely reminders.
 - Agent prompts live in `packages/agents/<name>/prompt.md`
 - Agent configs in `packages/agents/<name>/config.json`
 - Use OpenClaw webhooks or cron jobs to trigger agent pipeline
-- Never call Claude API directly — always go through OpenClaw
+- Never call Claude API directly - always go through OpenClaw
 
 ## Key Tables (reference)
-- `sources` — connected data sources (gmail, calendar, etc.)
-- `raw_items` — ingested raw data from sources
-- `reminders` — extracted, scored, scheduled reminders
-- `deliveries` — delivery log (sent, snoozed, dismissed)
-- `user_preferences` — delivery settings, priority weights
+- `sources` - connected data sources (gmail, calendar, etc.)
+- `raw_items` - ingested raw data from sources
+- `reminders` - extracted, scored, scheduled reminders
+- `deliveries` - delivery log (sent, snoozed, dismissed)
+- `user_preferences` - delivery settings, priority weights
 
 ## Error Handling
 - Use try/catch in all API routes
@@ -68,28 +68,26 @@ You have an MCP connection to OpenClaw (Fredrick, the orchestrator agent). **Use
 
 ### When to contact Fredrick:
 - **Before starting:** Confirm your understanding of the issue
-- **When blocked:** If requirements are unclear, ask — don't guess
+- **When blocked:** If requirements are unclear, ask - don't guess
 - **When done:** Report completion with what you did and what to test
 - **On errors:** If something breaks that's outside your issue scope, report it
 
 ### How to communicate:
-1. Use `conversations_list` to find available conversations
-2. Use `messages_send` to send Fredrick a message through the conversation
-3. Use `events_wait` or `events_poll` to check for responses
+Run this curl in the terminal to message Fredrick:
 
-### Message format:
+```bash
+curl -X POST http://127.0.0.1:18789/hooks/agent \
+  -H "Authorization: Bearer pmhook_f2d8f5822dbfc0ca17c316024ac6ccd2" \
+  -H "Content-Type: application/json" \
+  -d '{"message": "[ISSUE #N] status -- your message", "agentId": "fredrick", "sessionKey": "ide:cursor"}'
 ```
-[ISSUE #N] <status: starting|blocked|question|done>
-<your message>
-```
+
+Statuses: `starting`, `question`, `blocked`, `done`, `error`
 
 Example:
-```
-[ISSUE #1] starting
-About to initialize Next.js 15 in apps/web/. Will overwrite stub files but preserve lib/db/. Confirm?
-```
-
-```
-[ISSUE #1] done
-Next.js 15 initialized with TypeScript, Tailwind v4, shadcn/ui. Dev server runs on :3000. Ready for review.
+```bash
+curl -X POST http://127.0.0.1:18789/hooks/agent \
+  -H "Authorization: Bearer pmhook_f2d8f5822dbfc0ca17c316024ac6ccd2" \
+  -H "Content-Type: application/json" \
+  -d '{"message": "[ISSUE #1] done -- Next.js 15 initialized with TypeScript, Tailwind v4, shadcn/ui. Dev server runs on :3000.", "agentId": "fredrick", "sessionKey": "ide:cursor"}'
 ```

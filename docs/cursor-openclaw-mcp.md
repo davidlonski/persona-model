@@ -114,3 +114,9 @@ Fredrick can:
 - Event queue starts when the bridge connects (no replay of older history)
 - Use `messages_read` for older transcript history
 - The bridge uses the same auth as your local OpenClaw gateway
+
+### MCP `messages_send` — pick the right session
+
+`conversations_list` may return multiple routes (e.g. Discord channels and web UI chat). **MCP-originated sends are only supported on certain channels.** In particular, **do not use a Discord `sessionKey` for `messages_send`** — you will get `unsupported channel: discord`.
+
+**Always choose a webchat-backed conversation:** inspect each item’s `channel` (and `displayName` / `derivedTitle` if needed), pick the **webchat** session, and pass its `sessionKey` as `session_key` to `messages_send`. If unsure, use `conversations_list` with a `channel` filter once you know the webchat channel id OpenClaw uses on your gateway.
