@@ -9,17 +9,20 @@ Coding agents include this in every message to Fredrick for context.
 
 | IDE | Issue | Status | Notes |
 |---|---|---|---|
-| **Cursor** | #3 Telegram bot client | 🔵 assigned | lib/telegram/, app/api/telegram/ |
-| **Antigravity** | #2 PostgreSQL + Drizzle ORM | 🔵 assigned | lib/db/, .env, migrations |
+| **Cursor** | #7 Organizer Agent integration | 🔵 assigned | lib/agents/organizer/, app/api/organize/ |
+| **Antigravity** | #8 Reminder delivery + scheduler | 🔵 assigned | lib/scheduler/, app/api/deliver/ |
 
 ## Completed
 - #1 Initialize Next.js 15 (Cursor) — committed
+- #2 PostgreSQL + Drizzle ORM (Antigravity) — committed
+- #3 Telegram bot client (Cursor) — committed
+- #4 Gmail integration (Antigravity) — committed
+- #5 Google Calendar integration (Antigravity) — committed
+- #6 Filtering Agent (Antigravity) — committed
 
 ## Queue (next up)
-- **#4** Gmail integration
-- **#5** Google Calendar integration
-- **#6** Filtering Agent integration
-- **#7** Organizer Agent integration
+- **#9** Snooze + feedback loop
+- **#10** Dashboard UI
 
 ## Rules
 - One issue per IDE at a time
