@@ -10,14 +10,14 @@ Coding agents include this in every message to Fredrick for context.
 | IDE | Issue | Status | Notes |
 |---|---|---|---|
 | **Cursor** | #3 Telegram bot client | 🔵 assigned | lib/telegram/, app/api/telegram/ |
-| **Antigravity** | #2 PostgreSQL + Drizzle ORM | 🔵 assigned | lib/db/, .env, migrations |
+| **Antigravity** | #5 Google Calendar integration | 🔵 assigned | lib/calendar/, app/api/calendar/ |
 
 ## Completed
 - #1 Initialize Next.js 15 (Cursor) — committed
+- #2 PostgreSQL + Drizzle ORM (Antigravity) — committed
+- #4 Gmail integration (Antigravity) — committed
 
 ## Queue (next up)
-- **#4** Gmail integration
-- **#5** Google Calendar integration
 - **#6** Filtering Agent integration
 - **#7** Organizer Agent integration
 
