@@ -1,86 +1,54 @@
 # PersonaModel
 
-Cross-device AI reminder agent that watches your digital life and surfaces timely, prioritized reminders on whatever device you're using.
+PersonaModel is a cross-device AI reminder agent powered by a 3-agent pipeline. It automatically polls Gmail and Google Calendar, extracts actionable reminders via Claude Haiku, and orchestrates delivery via Telegram.
 
-## Problem
+## Environment Variables
 
-Actionable items get buried. A shipping date in an email, a text follow-up, a meeting prep deadline — they live in different silos. PersonaModel is a single agent pipeline that **reads everything** and **reminds at the right moment**.
+Copy the `.env.example` file to `.env` and fill in the required variables:
 
-## Architecture
+- `DATABASE_URL`: PostgreSQL connection string (e.g., `postgresql://user:pass@localhost:5432/persona_model`).
+- `OPENCLAW_GATEWAY_URL`: Local orchestrator URL (defaults to `http://127.0.0.1:18789`).
+- `TELEGRAM_BOT_TOKEN`: Token obtained from BotFather on Telegram.
+- `TELEGRAM_CHAT_ID`: Your personal chat ID where reminders should be sent.
+- `TELEGRAM_WEBHOOK_SECRET`: A random secret string to authenticate Telegram webhooks.
+- `GOOGLE_CLIENT_ID`: OAuth client ID for Gmail/Calendar API access.
+- `GOOGLE_CLIENT_SECRET`: OAuth client secret.
+- `GOOGLE_PUBSUB_TOPIC`: Google Pub/Sub topic name for Gmail push notifications.
+- `GOOGLE_REFRESH_TOKEN`: OAuth refresh token to keep the agent authenticated indefinitely.
+- `ANTHROPIC_API_KEY`: API key for Claude 3 Haiku agent extraction and filtering.
 
-```
-Raw Data Sources (Email, Calendar, Messages, Social Media)
-         ↓
-   Filtering Agent — extracts actionable items, scores relevance
-         ↓ (ITEM: Who | What | When)
-   Organizer Agent — time-hierarchy organization (year/month/week/day)
-         ↓
-   BreakDown Agent — timeline visualizer, delivery scheduling
-         ↓
-   Delivery (Telegram, Web Dashboard, Desktop Notifications)
-```
+## Setup Guide
 
-### Three Agent Pipeline
-
-| Agent | Role | Model |
-|---|---|---|
-| **Filtering Agent** | Extract action items from raw data, classify by `Who \| What \| When`, score relevance to user | Haiku (fast/cheap) |
-| **Organizer Agent** | Organize items into time hierarchy, resolve relative dates, group by day/week/month | Haiku |
-| **BreakDown Agent** | Generate timeline views, schedule delivery windows, create briefing documents | Sonnet (complex reasoning) |
-
-## Tech Stack
-
-- **Frontend:** Next.js 15 (App Router)
-- **Backend:** Next.js API Routes + OpenClaw agents
-- **Database:** PostgreSQL (local)
-- **Agent Runtime:** OpenClaw (Claude Sonnet/Haiku via Anthropic)
-- **Delivery:** Telegram Bot API
-- **Communication:** OpenClaw MCP bridge → Cursor IDE
-
-## Getting Started
-
+### 1. Database Migrations
+We use Drizzle ORM to manage the database schema. Ensure PostgreSQL is running, then apply migrations:
 ```bash
-# Prerequisites
-# - Node.js 20+
-# - PostgreSQL 16+
-# - OpenClaw with gateway running
-
-# Install dependencies
-cd apps/web && npm install
-
-# Set up database
-createdb persona_model
-npm run db:migrate
-
-# Start dev server
-npm run dev
+cd apps/web
+npm install
+npm run db:push
 ```
 
-## Project Structure
-
-```
-persona-model/
-├── apps/web/                  # Next.js dashboard + API
-│   ├── app/                   # App Router pages
-│   ├── components/            # React components
-│   └── lib/                   # Shared utilities, DB, agent clients
-├── packages/agents/           # Agent definitions + prompts
-│   ├── filtering/             # Filtering Agent
-│   ├── organizer/             # Organizer Agent
-│   └── breakdown/             # BreakDown Agent
-├── docs/                      # Architecture, specs, API docs
-└── .cursor/                   # Cursor IDE MCP config
+### 2. Telegram Webhook Registration
+To receive interactions (Act, Snooze, Dismiss), set the webhook URL pointing to your deployment:
+```bash
+curl -F "url=https://your-vercel-app.vercel.app/api/telegram/webhook" \
+     -F "secret_token=YOUR_TELEGRAM_WEBHOOK_SECRET" \
+     https://api.telegram.org/botYOUR_TELEGRAM_BOT_TOKEN/setWebhook
 ```
 
-## Development Workflow
+### 3. Gmail/Calendar OAuth Setup
+- Create a project in Google Cloud Console.
+- Enable the Gmail API and Google Calendar API.
+- Create OAuth credentials (Desktop/Web app) and retrieve your `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
+- Obtain a `GOOGLE_REFRESH_TOKEN` using the Google OAuth playground.
 
-This project uses a multi-agent development pipeline:
+### 4. Vercel Deployment
+1. Import the repository into Vercel.
+2. In the Vercel dashboard, navigate to **Settings > Environment Variables**.
+3. Add ALL the environment variables listed above (do NOT commit secrets to the repository).
+4. The `vercel.json` file configures Cron Jobs to automatically trigger polling and delivery.
+5. Deploy the application.
 
-1. **Fredrick** (OpenClaw orchestrator) creates and manages GitHub issues
-2. **Cursor** (coding agent) picks up issues and implements them
-3. Communication flows through OpenClaw MCP bridge
-4. PRs are reviewed by Fredrick, feedback loops until merged
-
-## License
-
-MIT
+## Pipeline Orchestration
+The pipeline runs automatically via Vercel Cron triggers:
+- **Poll Cycle (Every 15 mins)**: Triggers `GET /api/pipeline/run` to extract and filter new events.
+- **Delivery Cycle (Every 5 mins)**: Triggers `GET /api/deliver/run` to send due reminders to Telegram.

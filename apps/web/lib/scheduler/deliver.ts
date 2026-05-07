@@ -1,20 +1,22 @@
-import { db } from "../db";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { getDb } from "../db/index";
 import { reminders } from "../db/schema";
 import { eq, lte, and } from "drizzle-orm";
 
-// Assume this exists from Issue #3
-// @ts-ignore
-import { sendReminder } from "../telegram/client";
+import { createTelegramClientFromEnv } from "../telegram/client";
 
 export async function deliverDueReminders() {
   const now = new Date();
+  const db = getDb();
+  const client = createTelegramClientFromEnv();
 
   // The Drizzle query using the schema from Issue #2
   // @ts-ignore
-  const dueReminders = await db.query.reminders.findMany({
+  const dueReminders: any[] = await db.query.reminders.findMany({
     where: and(
       eq((reminders as any).status, "pending"),
-      lte((reminders as any).dueAt, now)
+      lte((reminders as any).remindAt, now)
     )
   });
 
@@ -22,9 +24,9 @@ export async function deliverDueReminders() {
 
   for (const reminder of dueReminders) {
     try {
-      const message = `Reminder: ${reminder.title}\nDue: ${reminder.dueAt}\n${reminder.body || ""}`;
+      const message = `Reminder: ${reminder.what}\nDue: ${reminder.remindAt}\n${reminder.who || ""}`;
       
-      await sendReminder(message);
+      await client.sendMessage(process.env.TELEGRAM_CHAT_ID || "", message);
 
       await db.update(reminders)
         .set({ status: "sent" as any })

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { deliverDueReminders } from '../../../../lib/scheduler/deliver';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function POST(req: Request) {
   try {
     const deliveredCount = await deliverDueReminders();
@@ -12,4 +13,9 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function GET(req: Request) {
+  return POST(req);
 }
