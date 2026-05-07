@@ -73,18 +73,19 @@ You have an MCP connection to OpenClaw (Fredrick, the orchestrator agent). **Use
 - **On errors:** If something breaks that's outside your issue scope, report it
 
 ### How to communicate:
-Use the helper script to message Fredrick and get a response:
+Use the helper script with your IDE name:
 
 ```bash
-./scripts/ask-fredrick.sh "[ISSUE #N] status -- your message"
+./scripts/ask-fredrick.sh cursor "[ISSUE #N] status -- your message"
 ```
 
-This is **synchronous** — it sends your message and prints Fredrick's reply. **Read the response before continuing.**
+This is **synchronous** — sends your message + TASKS.md context, prints Fredrick's reply. **Read and follow the response.**
 
-Statuses: `starting`, `question`, `blocked`, `done`, `error`
-
-Example:
-```bash
-./scripts/ask-fredrick.sh "[ISSUE #1] done -- Next.js 15 initialized with TypeScript, Tailwind v4, shadcn/ui. Dev server runs on :3000."
-# Fredrick replies with next steps or approval
-```
+### Before starting any work:
+1. Check **TASKS.md** for your current assignment
+2. If no assignment: `./scripts/ask-fredrick.sh cursor "Requesting next task assignment"`
+3. `git pull` before touching files
+4. Report starting: `./scripts/ask-fredrick.sh cursor "[ISSUE #N] starting -- plan summary"`
+5. Work on the issue
+6. Report done: `./scripts/ask-fredrick.sh cursor "[ISSUE #N] done -- summary of changes"`
+7. Read Fredrick's response for next steps

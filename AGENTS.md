@@ -34,15 +34,22 @@ This project is orchestrated by **Fredrick**, an OpenClaw agent. You have MCP to
 
 ### How to message Fredrick:
 
-Use the helper script — it sends your message and returns Fredrick's response:
+Use the helper script with your IDE name:
 
 ```bash
-./scripts/ask-fredrick.sh "[ISSUE #N] status — your message here"
+# From Cursor:
+./scripts/ask-fredrick.sh cursor "[ISSUE #N] status — your message"
+
+# From Antigravity:
+./scripts/ask-fredrick.sh antigravity "[ISSUE #N] status — your message"
 ```
 
-This is **synchronous** — it waits for Fredrick's reply and prints it. Read the response before continuing.
+This is **synchronous** — it sends your message + current TASKS.md context, waits for Fredrick's reply, and prints it. **Read the response before continuing.**
 
 Message statuses: `starting`, `question`, `blocked`, `done`, `error`
+
+### Task assignments:
+Check **TASKS.md** in the repo root to see your current assignment. Fredrick maintains this file. If you have no assignment, ask Fredrick for one.
 
 ### Workflow:
 1. **Start of task:** Send `[ISSUE #N] starting` with your plan
