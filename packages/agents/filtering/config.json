@@ -1,0 +1,39 @@
+{
+  "name": "filtering",
+  "description": "Extracts actionable items from raw data sources",
+  "model": "anthropic/claude-haiku-4-5",
+  "promptFile": "prompt.md",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "source": { "type": "string", "enum": ["gmail", "calendar", "imessage", "telegram", "slack", "manual"] },
+      "sender": { "type": "string" },
+      "subject": { "type": "string" },
+      "body": { "type": "string" },
+      "receivedAt": { "type": "string", "format": "date-time" },
+      "metadata": { "type": "object" }
+    },
+    "required": ["source", "body"]
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "who": { "type": "string" },
+            "what": { "type": "string" },
+            "when": { "type": "string" },
+            "whenText": { "type": "string" },
+            "priority": { "type": "string", "enum": ["P0", "P1", "P2", "P3"] },
+            "relevanceScore": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "reasoning": { "type": "string" }
+          },
+          "required": ["what", "priority", "relevanceScore"]
+        }
+      }
+    }
+  }
+}

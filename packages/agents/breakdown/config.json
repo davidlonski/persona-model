@@ -1,0 +1,6 @@
+{
+  "name": "breakdown",
+  "description": "Generates timeline views, daily briefings, and delivery-ready content",
+  "model": "anthropic/claude-sonnet-4-6",
+  "promptFile": "prompt.md"
+}

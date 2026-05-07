@@ -1,0 +1,68 @@
+# PersonaModel — Cursor Rules
+
+## Project Overview
+PersonaModel is a cross-device AI reminder agent built with Next.js and OpenClaw.
+It uses a 3-agent pipeline (Filtering → Organizer → BreakDown) to extract actionable
+items from data sources and deliver timely reminders.
+
+## Tech Stack
+- Next.js 15 with App Router (TypeScript)
+- PostgreSQL 16 (local, via `pg` or Drizzle ORM)
+- Tailwind CSS + shadcn/ui for components
+- OpenClaw for agent orchestration (runs locally on Mac Studio)
+- Telegram Bot API for mobile delivery
+
+## Code Style
+- TypeScript strict mode — no `any` types
+- Use `async/await` over `.then()` chains
+- Prefer named exports over default exports
+- Use Drizzle ORM for all database queries — no raw SQL in route handlers
+- Server Components by default; use `"use client"` only when needed
+- API routes in `app/api/` using Next.js Route Handlers
+
+## File Structure Conventions
+- `app/` — pages and layouts (App Router)
+- `app/api/` — API route handlers
+- `components/` — reusable React components
+- `components/ui/` — shadcn/ui base components
+- `lib/` — shared utilities, database client, types
+- `lib/db/` — Drizzle schema, migrations, queries
+- `lib/agents/` — agent prompt templates and OpenClaw integration
+- `lib/telegram/` — Telegram bot client
+
+## Database
+- Use Drizzle ORM with PostgreSQL
+- Schema lives in `lib/db/schema.ts`
+- Migrations in `lib/db/migrations/`
+- All timestamps in UTC, display in user's timezone on frontend
+
+## Agent Integration
+- Agents are orchestrated through OpenClaw (gateway at localhost:18789)
+- Agent prompts live in `packages/agents/<name>/prompt.md`
+- Agent configs in `packages/agents/<name>/config.json`
+- Use OpenClaw webhooks or cron jobs to trigger agent pipeline
+- Never call Claude API directly — always go through OpenClaw
+
+## Key Tables (reference)
+- `sources` — connected data sources (gmail, calendar, etc.)
+- `raw_items` — ingested raw data from sources
+- `reminders` — extracted, scored, scheduled reminders
+- `deliveries` — delivery log (sent, snoozed, dismissed)
+- `user_preferences` — delivery settings, priority weights
+
+## Error Handling
+- Use try/catch in all API routes
+- Return consistent JSON error shape: `{ error: string, details?: string }`
+- Log errors with context (source, action, item ID)
+
+## When Working on Issues
+- Read the full issue description before starting
+- Check `docs/architecture.md` for system context
+- Test locally before committing
+- One logical change per commit
+- Commit messages: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`
+
+## Communication
+- Fredrick (OpenClaw agent) manages the backlog and reviews code
+- Ask Fredrick for clarification on requirements via the MCP bridge
+- Don't guess on business logic — ask
