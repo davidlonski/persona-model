@@ -62,7 +62,34 @@ items from data sources and deliver timely reminders.
 - One logical change per commit
 - Commit messages: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`
 
-## Communication
-- Fredrick (OpenClaw agent) manages the backlog and reviews code
-- Ask Fredrick for clarification on requirements via the MCP bridge
-- Don't guess on business logic — ask
+## Communication with Fredrick (Orchestrator)
+
+You have an MCP connection to OpenClaw (Fredrick, the orchestrator agent). **Use it.**
+
+### When to contact Fredrick:
+- **Before starting:** Confirm your understanding of the issue
+- **When blocked:** If requirements are unclear, ask — don't guess
+- **When done:** Report completion with what you did and what to test
+- **On errors:** If something breaks that's outside your issue scope, report it
+
+### How to communicate:
+1. Use `conversations_list` to find available conversations
+2. Use `messages_send` to send Fredrick a message through the conversation
+3. Use `events_wait` or `events_poll` to check for responses
+
+### Message format:
+```
+[ISSUE #N] <status: starting|blocked|question|done>
+<your message>
+```
+
+Example:
+```
+[ISSUE #1] starting
+About to initialize Next.js 15 in apps/web/. Will overwrite stub files but preserve lib/db/. Confirm?
+```
+
+```
+[ISSUE #1] done
+Next.js 15 initialized with TypeScript, Tailwind v4, shadcn/ui. Dev server runs on :3000. Ready for review.
+```

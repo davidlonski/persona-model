@@ -28,6 +28,28 @@ PersonaModel: Cross-device AI reminder agent with a 3-agent pipeline.
 - `docs/architecture.md` — full system architecture
 - `.cursorrules` — Cursor IDE coding conventions
 
+## Communication with Fredrick (Orchestrator)
+
+This project is orchestrated by **Fredrick**, an OpenClaw agent. You have MCP tools to talk to him.
+
+### MCP Tools Available:
+- `conversations_list` — find the Fredrick conversation
+- `messages_send` — send a message (status update, question, completion report)
+- `messages_read` — read recent messages from Fredrick
+- `events_wait` — wait for a response from Fredrick
+
+### Workflow:
+1. **Start of task:** Send `[ISSUE #N] starting` with your plan
+2. **If blocked:** Send `[ISSUE #N] blocked` with what you need
+3. **When done:** Send `[ISSUE #N] done` with summary of changes
+4. **Wait for review** before moving to next issue
+
+### Rules:
+- Don't guess on business logic — ask Fredrick
+- Don't move to the next issue without confirmation
+- Report errors that are outside your issue scope
+- One logical change per commit: `feat:`, `fix:`, `docs:`, `refactor:`, `test:`
+
 ## Testing
 - Test locally before committing
 - API routes: use curl or Thunder Client
