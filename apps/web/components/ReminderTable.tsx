@@ -1,8 +1,9 @@
 import React from 'react';
 import { StatusBadge } from './StatusBadge';
 import { format } from 'date-fns';
+import type { Reminder } from '@/lib/db/schema';
 
-export function ReminderTable({ reminders }: { reminders: any[] }) {
+export function ReminderTable({ reminders }: { reminders: Reminder[] }) {
   if (reminders.length === 0) {
     return (
       <div className="p-8 text-center text-gray-500 bg-white border border-gray-100 rounded-xl shadow-sm">
@@ -27,11 +28,11 @@ export function ReminderTable({ reminders }: { reminders: any[] }) {
           {reminders.map((reminder) => (
             <tr key={reminder.id} className="hover:bg-gray-50/50 transition-colors">
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm font-medium text-gray-900">{reminder.title || reminder.what || 'No Title'}</div>
+                <div className="text-sm font-medium text-gray-900">{reminder.what}</div>
                 {reminder.who && <div className="text-xs text-gray-500">From: {reminder.who}</div>}
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <span className="text-sm text-gray-500">{reminder.source || 'manual'}</span>
+                <span className="text-sm text-gray-500">—</span>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <span className="text-sm font-medium text-gray-700">{reminder.priority}</span>
@@ -40,8 +41,11 @@ export function ReminderTable({ reminders }: { reminders: any[] }) {
                 <StatusBadge status={reminder.status} />
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {reminder.dueAt || reminder.remindAt 
-                  ? format(new Date(reminder.dueAt || reminder.remindAt), 'MMM d, h:mm a')
+                {reminder.remindAt ?? reminder.when
+                  ? format(
+                      new Date(reminder.remindAt ?? reminder.when!),
+                      'MMM d, h:mm a',
+                    )
                   : '-'}
               </td>
             </tr>

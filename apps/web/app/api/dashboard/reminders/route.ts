@@ -1,7 +1,19 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import { reminders } from '@/lib/db/schema';
+import type { Reminder } from '@/lib/db/schema';
 import { eq, desc } from 'drizzle-orm';
+
+const STATUS_OPTIONS: Reminder['status'][] = [
+  'active',
+  'completed',
+  'expired',
+  'cancelled',
+];
+
+function isReminderStatus(value: string): value is Reminder['status'] {
+  return STATUS_OPTIONS.includes(value as Reminder['status']);
+}
 
 export async function GET(request: Request) {
   try {
@@ -11,9 +23,9 @@ export async function GET(request: Request) {
     const db = getDb();
     
     let data;
-    if (statusFilter && statusFilter !== 'all') {
+    if (statusFilter && statusFilter !== 'all' && isReminderStatus(statusFilter)) {
       data = await db.query.reminders.findMany({
-        where: eq(reminders.status, statusFilter as any),
+        where: eq(reminders.status, statusFilter),
         orderBy: [desc(reminders.createdAt)],
       });
     } else {
