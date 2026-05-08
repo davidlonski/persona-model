@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextResponse } from 'next/server';
-import { deliverDueReminders } from '../../../../lib/scheduler/deliver';
+import { deliverDueReminders } from '@/lib/scheduler/deliver';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function POST(req: Request) {
